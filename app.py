@@ -20,7 +20,7 @@ def check_index():
     
     time.sleep(2.0)
     try:
-        results = list(search(query, num_results=10, pause=2.0))
+        results = list(search(query, num_results=10))
     except Exception as e:
         return jsonify({'result': f'Ошибка при выполнении поиска: {str(e)}'})
     
