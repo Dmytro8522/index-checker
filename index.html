@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Проверка индексации</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+      padding: 20px;
+    }
+    h2 {
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+    form {
+      width: 100%;
+      max-width: 600px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 15px;
+      font-size: 1.2em;
+      background-color: #000;
+      color: #fff;
+      border: 2px solid #fff;
+      border-radius: 5px;
+      box-sizing: border-box;
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 15px 30px;
+      font-size: 1.2em;
+      color: #000;
+      background-color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 1.4em;
+    }
+    @media (max-width: 600px) {
+      input[type="text"],
+      button {
+        font-size: 1em;
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h2>Проверка индексации в Google</h2>
+  <form id="check-form">
+    <input type="text" id="url" placeholder="Введите URL" required>
+    <button type="submit">Проверить</button>
+  </form>
+  <div id="result"></div>
+  <script>
+    document.getElementById("check-form").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const url = document.getElementById("url").value;
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerText = "Проверка...";
+      const response = await fetch("/check", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ url })
+      });
+      const data = await response.json();
+      resultDiv.innerText = data.result;
+    });
+  </script>
+</body>
+</html>
