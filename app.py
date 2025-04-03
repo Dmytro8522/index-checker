@@ -5,6 +5,14 @@ import urllib.parse
 
 app = Flask(__name__)
 
+def is_same_canonical(url1, url2):
+    """
+    Сравнивает канонические части двух URL, игнорируя параметры и завершающий слэш.
+    """
+    p1 = urllib.parse.urlparse(url1)
+    p2 = urllib.parse.urlparse(url2)
+    return (p1.netloc.lower() == p2.netloc.lower()) and (p1.path.rstrip('/').lower() == p2.path.rstrip('/').lower())
+
 @app.route('/')
 def index():
     return send_from_directory('.', 'index.html')
@@ -16,8 +24,7 @@ def check_index():
     if not url:
         return jsonify({'result': 'URL не указан'})
     
-    query = f"site:{urllib.parse.quote(url)}"
-    canonical_url = url.rstrip('/')
+    query = f"site:{url}"
     
     time.sleep(2.0)
     try:
@@ -27,7 +34,7 @@ def check_index():
     
     found = False
     for result in results:
-        if urllib.parse.urlparse(result).netloc + urllib.parse.urlparse(result).path == urllib.parse.urlparse(canonical_url).netloc + urllib.parse.urlparse(canonical_url).path:
+        if is_same_canonical(url, result):
             found = True
             break
     
