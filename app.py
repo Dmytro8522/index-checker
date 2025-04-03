@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, send_from_directory
 from googlesearch import search
 import time
+import urllib.parse
 
 app = Flask(__name__)
 
@@ -15,7 +16,7 @@ def check_index():
     if not url:
         return jsonify({'result': 'URL не указан'})
     
-    query = f"site:{url}"
+    query = f"site:{urllib.parse.quote(url)}"
     canonical_url = url.rstrip('/')
     
     time.sleep(2.0)
@@ -26,7 +27,7 @@ def check_index():
     
     found = False
     for result in results:
-        if result.rstrip('/').startswith(canonical_url):
+        if urllib.parse.urlparse(result).netloc + urllib.parse.urlparse(result).path == urllib.parse.urlparse(canonical_url).netloc + urllib.parse.urlparse(canonical_url).path:
             found = True
             break
     
