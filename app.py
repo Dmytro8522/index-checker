@@ -17,7 +17,7 @@ def check_index():
         return jsonify({'result': 'URL не указан'})
     
     query = f"site:{urllib.parse.quote(url)}"
-    canonical_url = urllib.parse.urlparse(url)
+    canonical_url = url.rstrip('/')
     
     time.sleep(2.0)
     try:
@@ -27,10 +27,7 @@ def check_index():
     
     found = False
     for result in results:
-        result_url = urllib.parse.urlparse(result)
-        if (result_url.netloc == canonical_url.netloc and
-            result_url.path == canonical_url.path and
-            urllib.parse.parse_qs(result_url.query) == urllib.parse.parse_qs(canonical_url.query)):
+        if urllib.parse.urlparse(result).netloc + urllib.parse.urlparse(result).path == urllib.parse.urlparse(canonical_url).netloc + urllib.parse.urlparse(canonical_url).path:
             found = True
             break
     
